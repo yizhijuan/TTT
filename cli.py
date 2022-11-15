@@ -19,7 +19,7 @@ class Board:
         for i in range(3):
             print(self.board[i])
     def is_valid_move(self, position):
-        x = position / 3 - 1
+        x = (position + 2) // 3 - 1
         y = (position + 2 ) % 3
         if self.board[x][y] == None:
             return True
@@ -27,14 +27,14 @@ class Board:
             return False
     def change_board(self, position, type):
         if self.is_valid_move(position):
-            x = position / 3 - 1
+            x = (position + 2) // 3 - 1
             y = (position + 2 ) % 3
             self.board[x][y] = type
             return self.board
 
 
 if __name__ == '__main__':
-    board = Board.board()
+    board = Board()
     winner = None
     # a single player or 2 players
     print("Please enter the number of human player:")
@@ -42,9 +42,11 @@ if __name__ == '__main__':
     board.print_board()
     if player_number == 1:
         is_player1_turn = 1
+        print("This is X's turn")
         while winner == None:
             if is_player1_turn == 1:
                 # Input a move from the player.
+                print("Please enter the position(1~9)")
                 position = int(input())
                 type = 'X'
                 is_player1_turn = 0
@@ -68,6 +70,7 @@ if __name__ == '__main__':
     if player_number == 2:
         is_player1_turn = 1
         while winner == None:
+            print("Please enter the position(1~9)")
             if is_player1_turn == 1:
                 # Input a move from the player1.
                 position = int(input())

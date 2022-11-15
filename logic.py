@@ -17,16 +17,16 @@ def get_winner(board):
     win = 0 #no one wins
     for key in('O','X'):
         for i in range(3):
-            if board[i][0] == key and board[i][1] == key and board[i][2] == key:
+            if board.board[i][0] == key and board.board[i][1] == key and board.board[i][2] == key:
                 win = 1
                 winner = key
                 break
-            elif board[0][i] == key and board[1][i] == key and board[2][i] == key:
+            elif board.board[0][i] == key and board.board[1][i] == key and board.board[2][i] == key:
                 win = 1
                 winner = key
                 break
             
-        if (board[0][0] == key and board[1][1] == key and board[2][2] == key) or (board[0][2] == key and board[1][1] == key and board[2][0] == key):
+        if (board.board[0][0] == key and board.board[1][1] == key and board.board[2][2] == key) or (board.board[0][2] == key and board.board[1][1] == key and board.board[2][0] == key):
             win = 1
             winner = key
     if win == 0:
