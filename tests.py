@@ -20,6 +20,11 @@ class TestLogic(unittest.TestCase):
             ['2', 'O', 'O'],
             ['O', 'O', 'X'],
         ]
+        board4 = [
+            ['O', 'X', 'X'],
+            ['X', 'X', 'O'],
+            ['O', 'X', 'X'],
+        ]
         self.assertEqual(logic.get_winner(board1), 'X')
         self.assertEqual(logic.get_winner(board2), 'O')
         self.assertEqual(logic.get_winner(board3), 'X')

@@ -7,68 +7,84 @@ from logic import make_empty_board
 from logic import get_winner
 from logic import other_player
 
-if __name__ == '__main__':
-    board = make_empty_board()
-    '''
-    board = [['O', 'X', 'X'],
-            ['X', 'X', 'O'],
-            ['O', 'X', 'X']]
-    '''
-    winner = None
-    # a single player or 2 players
-    print("Please enter the number of player(s):")
-    player_number = int(input())
-    if player_number == 1:
-        is_player_turn = 1
-        while winner == None:
-            if is_player_turn == 1:
-                print("TODO: take a turn!")
-                # TODO: Show the board to the user.
-                for i in range(3):
-                    print(board[i])
-                # TODO: Input a move from the player.
-                position = int(input())
-                x = position / 3 - 1
-                y = (position + 2 ) % 3
-                chess = 'X'
-                is_player_turn = 0
-            elif is_player_turn == 0:
-                # bot generates a position
-                while board[x][y] != None:
-                    position = random.randint(0,10)
-                    x = position / 3 - 1
-                    y = (position + 2 ) % 3
-                # TODO: Update the board.
-                board[x][y] = 'O'
-                for i in range(3):
-                    print(board[i])
-                winner = get_winner(board)
-                # TODO: Update who's turn it is.
-                if winner != None:
-                    print(winner, "wins!")
-                else:
-                    print("This is", other_player(chess), "'s turn")
-                print("\n")
-    
-    if player_number == 2:
-        while winner == None:
-            print("TODO: take a turn!")
-            # TODO: Show the board to the user.
-            for i in range(3):
-                print(board[i])
-            # TODO: Input a move from the player.
-            position = int(input())
+
+class Board:
+    def __init__(self):
+        self.board = [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None],
+        ]
+    def print_board(self):
+        for i in range(3):
+            print(self.board[i])
+    def is_valid_move(self, position):
+        x = position / 3 - 1
+        y = (position + 2 ) % 3
+        if self.board[x][y] == None:
+            return True
+        else:
+            return False
+    def change_board(self, position, type):
+        if self.is_valid_move(position):
             x = position / 3 - 1
             y = (position + 2 ) % 3
-            chess = input()
-            # TODO: Update the board.
-            board[x][y] = chess
-            for i in range(3):
-                print(board[i])
+            self.board[x][y] = type
+            return self.board
+
+
+if __name__ == '__main__':
+    board = Board.board()
+    winner = None
+    # a single player or 2 players
+    print("Please enter the number of human player:")
+    player_number = int(input())
+    board.print_board()
+    if player_number == 1:
+        is_player1_turn = 1
+        while winner == None:
+            if is_player1_turn == 1:
+                # Input a move from the player.
+                position = int(input())
+                type = 'X'
+                is_player1_turn = 0
+            elif is_player1_turn == 0:
+                # Bot generates a position
+                while board.is_valid_move(position) == False:
+                    position = random.randint(0,10)                  
+                type = 'O'  
+                is_player1_turn = 1
+            # Update the board.
+            board.change_board(position, type) 
+            board.print_board()
             winner = get_winner(board)
-            # # TODO: Update who's turn it is.
+            # Update who's turn it is.
             if winner != None:
                 print(winner, "wins!")
             else:
-                print("This is", other_player(chess), "'s turn")
+                print("This is", other_player(type), "'s turn")
             print("\n")
+    
+    if player_number == 2:
+        is_player1_turn = 1
+        while winner == None:
+            if is_player1_turn == 1:
+                # Input a move from the player1.
+                position = int(input())
+                type = 'X'
+                is_player1_turn = 0
+            elif is_player1_turn == 0:
+                # Input a move from the player2.
+                position = int(input())                  
+                type = 'O'  
+                is_player1_turn = 1
+            # Update the board.
+            board.change_board(position, type) 
+            board.print_board()
+            winner = get_winner(board)
+            # Update who's turn it is.
+            if winner != None:
+                print(winner, "wins!")
+            else:
+                print("This is", other_player(type), "'s turn")
+            print("\n")  
