@@ -3,9 +3,7 @@
 # For core game logic, see logic.py.
 
 import random
-from logic import make_empty_board
-from logic import get_winner
-from logic import other_player
+from logic import Game
 
 
 class Board:
@@ -35,6 +33,7 @@ class Board:
 
 if __name__ == '__main__':
     board = Board()
+    game = Game()
     winner = None
     # a single player or 2 players
     print("Please enter the number of human player:")
@@ -53,20 +52,15 @@ if __name__ == '__main__':
             elif is_player1_turn == 0:
                 # Bot generates a position
                 while board.is_valid_move(position) == False:
-                    position = random.randint(0,10)                  
+                    position = random.randint(1,9)                  
                 type = 'O'  
                 is_player1_turn = 1
             # Update the board.
             board.change_board(position, type) 
             board.print_board()
-            winner = get_winner(board)
-            # Update who's turn it is.
-            if winner != None:
-                print(winner, "wins!")
-            else:
-                print("This is", other_player(type), "'s turn")
-            print("\n")
-    
+            game.get_winner(board,type)
+
+
     if player_number == 2:
         is_player1_turn = 1
         while winner == None:
@@ -84,10 +78,5 @@ if __name__ == '__main__':
             # Update the board.
             board.change_board(position, type) 
             board.print_board()
-            winner = get_winner(board)
-            # Update who's turn it is.
-            if winner != None:
-                print(winner, "wins!")
-            else:
-                print("This is", other_player(type), "'s turn")
-            print("\n")  
+            game.get_winner(board,type)
+
