@@ -6,6 +6,8 @@ import random
 from logic import Game
 from pd import moves
 from pd import games_pd
+import pandas as pd
+
 
 class Board:
     def __init__(self):
@@ -33,20 +35,30 @@ class Board:
 
 
 if __name__ == '__main__':
+    games_pd = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/games_pd.csv")
+    moves = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/moves.csv")
     board = Board()
     game = Game()
+    
     game.winner = None
     # a single player or 2 players
     print("Please enter the number of human player:")
     player_number = int(input())
-    (is_player1_turn, player1_name, player2_name) = game.pre_set(board, player_number)
+    is_player1_turn = game.pre_set(board, player_number)
         
-    while game.winner == None:
+    while game.winner == None and game.turn < 9:
+        game.turn += 1
         if is_player1_turn == 1:
             # Input a move from the player.
             print("Please enter the position(1~9)")
             position = int(input())
             type = 'X'
+            moves.loc[len(moves)] = {
+                "Game ID":len(games_pd)+1,
+                "Turn":game.turn,
+                "Player":game.player1_name,
+                "Position":position
+            }
             is_player1_turn = 0
         elif is_player1_turn == 0:
             # Bot generates a position
@@ -56,29 +68,20 @@ if __name__ == '__main__':
             elif player_number == 2:
                 position = int(input()) 
             type = 'O'  
+            moves.loc[len(moves)] = {
+                "Game ID":len(games_pd)+1,
+                "Turn":game.turn,
+                "Player":game.player2_name,
+                "Position":position
+            }
             is_player1_turn = 1
         # Update the board.
         board.change_board(position, type) 
         board.print_board()
-        game.get_winner(board,type)
-        game.add_game(player1_name,player2_name,game.winner)
-
-        if is_player1_turn == 1:
-            moves.loc[len(moves)] = {
-                "Game ID":len(games_pd),
-                "Turn":0,
-                "Player":player1_name,
-                "Position":position
-            }
-        elif is_player1_turn == 0:
-            moves.loc[len(moves)] = {
-                "Game ID":len(games_pd),
-                "Turn":0,
-                "Player":player2_name,
-                "Position":position
-            }
-
-    games_pd.to_csv("games_pd.csv")
-    moves.to_csv("moves.csv")
+        game.winner = game.get_winner(board,type)
+             
+    games_pd = game.add_game(games_pd, game.player1_name, game.player2_name, game.winner)
+    games_pd.to_csv("games_pd.csv",index=False)
+    moves.to_csv("moves.csv",index=False)
 
     exit()
