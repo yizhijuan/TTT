@@ -4,7 +4,8 @@
 
 import random
 from logic import Game
-
+from pd import moves
+from pd import games_pd
 
 class Board:
     def __init__(self):
@@ -34,49 +35,50 @@ class Board:
 if __name__ == '__main__':
     board = Board()
     game = Game()
-    winner = None
+    game.winner = None
     # a single player or 2 players
     print("Please enter the number of human player:")
     player_number = int(input())
-    board.print_board()
-    if player_number == 1:
-        is_player1_turn = 1
-        print("This is X's turn")
-        while winner == None:
-            if is_player1_turn == 1:
-                # Input a move from the player.
-                print("Please enter the position(1~9)")
-                position = int(input())
-                type = 'X'
-                is_player1_turn = 0
-            elif is_player1_turn == 0:
-                # Bot generates a position
+    (is_player1_turn, player1_name, player2_name) = game.pre_set(board, player_number)
+        
+    while game.winner == None:
+        if is_player1_turn == 1:
+            # Input a move from the player.
+            print("Please enter the position(1~9)")
+            position = int(input())
+            type = 'X'
+            is_player1_turn = 0
+        elif is_player1_turn == 0:
+            # Bot generates a position
+            if player_number == 1:
                 while board.is_valid_move(position) == False:
                     position = random.randint(1,9)                  
-                type = 'O'  
-                is_player1_turn = 1
-            # Update the board.
-            board.change_board(position, type) 
-            board.print_board()
-            game.get_winner(board,type)
+            elif player_number == 2:
+                position = int(input()) 
+            type = 'O'  
+            is_player1_turn = 1
+        # Update the board.
+        board.change_board(position, type) 
+        board.print_board()
+        game.get_winner(board,type)
+        game.add_game(player1_name,player2_name,game.winner)
 
+        if is_player1_turn == 1:
+            moves.loc[len(moves)] = {
+                "Game ID":len(games_pd),
+                "Turn":0,
+                "Player":player1_name,
+                "Position":position
+            }
+        elif is_player1_turn == 0:
+            moves.loc[len(moves)] = {
+                "Game ID":len(games_pd),
+                "Turn":0,
+                "Player":player2_name,
+                "Position":position
+            }
 
-    if player_number == 2:
-        is_player1_turn = 1
-        while winner == None:
-            print("Please enter the position(1~9)")
-            if is_player1_turn == 1:
-                # Input a move from the player1.
-                position = int(input())
-                type = 'X'
-                is_player1_turn = 0
-            elif is_player1_turn == 0:
-                # Input a move from the player2.
-                position = int(input())                  
-                type = 'O'  
-                is_player1_turn = 1
-            # Update the board.
-            board.change_board(position, type) 
-            board.print_board()
-            game.get_winner(board,type)
+    games_pd.to_csv("games_pd.csv")
+    moves.to_csv("moves.csv")
 
+    exit()

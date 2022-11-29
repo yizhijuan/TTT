@@ -1,11 +1,45 @@
 # This file is where game logic lives. No input
 # or output happens here. The logic in this file
 # should be unit-testable.
+from pd import games_pd
 
 
 class Game:
     def __init__(self):
         self.winner = None
+    def pre_set(self, board, player_number):
+        if player_number == 1:
+            is_player1_turn = 1
+            print("Enter player's name:")
+            player1_name = str(input())
+            player2_name = 'Bot'
+        elif player_number == 2:
+            is_player1_turn = 1
+            print("Enter player1's name:")
+            player1_name = str(input())
+            print("Enter player2's name:")
+            player2_name = str(input())
+        board.print_board()
+        print("This is X's turn")
+        return (is_player1_turn, player1_name, player2_name)
+
+    def add_game(self,player1_name,player2_name,winner):   
+        games_pd.loc[len(games_pd)] = {
+            "Game ID":len(games_pd) + 1,
+            "Player1":player1_name,
+            "Player2":player2_name,
+            "Winner":winner
+        }
+        
+    ''' If I want to modify only one of the elements
+        games_pd.loc[len(games_pd)] = {
+            "Game ID",
+            "Player1",
+            "Player2",
+            "Winner":winner
+        }'''
+
+
     def other_player(self,type):
         """Given the character for a player, returns the other player."""
         if type == 'O':
@@ -13,6 +47,7 @@ class Game:
         else:
             type = 'O'
         return type
+        
     def get_winner(self,board,type):
         for key in('O','X'):
             for i in range(3):
