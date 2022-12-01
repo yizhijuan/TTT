@@ -13,6 +13,13 @@ players = pd.DataFrame(columns = [
     "Losses",
     "Draws"
 ])
+players.loc[0] = {
+    "Name":0,
+    "Wins":0,
+    "Losses":0,
+    "Draws":0
+}
+
 
 moves = pd.DataFrame(columns = [
     "Game ID",
@@ -20,3 +27,7 @@ moves = pd.DataFrame(columns = [
     "Player",
     "Position"
 ])
+
+players = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/players.csv")
+ranking_by_wins = players.sort_values(by="Wins", ascending=False)
+print(ranking_by_wins)

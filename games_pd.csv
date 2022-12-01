@@ -2,3 +2,17 @@ Game ID,Player1,Player2,Winner
 1,Alice,Bot,Alice
 2,Bob,Bot,Bob
 3,Cathy,Bot,Cathy
+4,Alice,Bot,Alice
+5,Alice,Bob,Alice
+6,Cathy, DuDu,Cathy
+7,P,Bot,P
+8,Ali,Bot,Ali
+9,U,Bot,U
+10,I,Bot,I
+11,Y,Bot,Y
+12,RR,Bot,RR
+13,RRR,Bot,RRR
+14,WW,Bot,WW
+15,Yo,Bot,Yo
+16,A,Bot,A
+17,A,B,A

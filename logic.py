@@ -2,7 +2,8 @@
 # or output happens here. The logic in this file
 # should be unit-testable.
 from pd import games_pd
-
+from pd import players
+import pandas as pd
 
 class Game:
     def __init__(self):
@@ -34,17 +35,16 @@ class Game:
             "Winner":winner
         }
         return games_pd
-    #append?    
+    
 
-    def other_player(self,type):
+    def other_player(self,is_player1_turn, game):
         """Given the character for a player, returns the other player."""
-        if type == 'O':
-            type = 'X'
+        if is_player1_turn == 1:
+            return game.player2_name
         else:
-            type = 'O'
-        return type
+            return game.player1_name
         
-    def get_winner(self,board,type):
+    def get_winner(self,board,is_player1_turn,game):
         for key in('O','X'):
             for i in range(3):
                 if board.board[i][0] == key and board.board[i][1] == key and board.board[i][2] == key:
@@ -62,6 +62,32 @@ class Game:
             print(self.player1_name, "wins!")
             return self.player1_name
         else:
-            print("This is", self.other_player(type), "'s turn")
+            print("This is", self.other_player(is_player1_turn, game), "'s turn")
         print("\n") 
         return self.winner
+
+    def record_result(self, game, players):
+        for name in [game.player1_name,game.player2_name]:
+            exist = players.loc[players['Name'] == name]
+            #player'name do not exist, create a new one
+            if exist.empty:  
+                print('1')
+                players.loc[len(players)] = {
+                    "Name":name,
+                    "Wins":0,
+                    "Losses":0,
+                    "Draws":0
+                }
+                exist = players.loc[len(players)-1]
+                players.to_csv("players.csv",index=False)
+                players = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/players.csv")
+
+            if game.winner == name:
+                players.loc[players[players["Name"] == name].index, "Wins"] += 1
+            elif game.winner == None:
+                players.loc[players[players["Name"] == name].index, "Draws"] += 1
+            else:
+                players.loc[players[players["Name"] == name].index, "Losses"] += 1
+        return players
+        
+                

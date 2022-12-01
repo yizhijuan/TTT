@@ -6,6 +6,7 @@ import random
 from logic import Game
 from pd import moves
 from pd import games_pd
+from pd import players
 import pandas as pd
 
 
@@ -37,9 +38,9 @@ class Board:
 if __name__ == '__main__':
     games_pd = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/games_pd.csv")
     moves = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/moves.csv")
+    players = pd.read_csv("/Users/yizhijuan/Documents/006UW/509/TTT/players.csv")
     board = Board()
     game = Game()
-    
     game.winner = None
     # a single player or 2 players
     print("Please enter the number of human player:")
@@ -78,10 +79,12 @@ if __name__ == '__main__':
         # Update the board.
         board.change_board(position, type) 
         board.print_board()
-        game.winner = game.get_winner(board,type)
-             
+        game.winner = game.get_winner(board,is_player1_turn,game)
+        
+    players = game.record_result(game, players)
     games_pd = game.add_game(games_pd, game.player1_name, game.player2_name, game.winner)
     games_pd.to_csv("games_pd.csv",index=False)
     moves.to_csv("moves.csv",index=False)
-
+    players.to_csv("players.csv",index=False)
+    
     exit()
